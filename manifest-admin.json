@@ -1,7 +1,7 @@
 {
   "name": "Ednalashess",
   "short_name": "Ednalashess",
-  "start_url": "./?admin",
+  "start_url": "./admin.html",
   "scope": "./",
   "display": "standalone",
   "background_color": "#ffffff",
@@ -18,5 +18,5 @@
       "type": "image/png"
     }
   ],
-  "id": "./?admin"
+  "id": "./admin.html"
 }

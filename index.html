@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ednalashess – Κλείσε ραντεβού</title>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Cardo&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<meta name="theme-color" content="#000000">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Ednalashess">
+<style>
+:root{--ink:#000;--deep:#555;--nude:#EBEBEB;--nude2:#F5F5F5;--bg:#FFFFFF;--surface:#fff;--muted:#6B6B6B;--line:#E2E2E2;--taken:#F3F3F3;--ok:#3F7A57;--err:#A4483A;color-scheme:light}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.5 Inter,system-ui,sans-serif;padding-bottom:env(safe-area-inset-bottom,0)}
+.demo{background:var(--nude2);color:var(--ink);text-align:center;padding:6px 16px;font-size:.8rem;padding-top:calc(6px + env(safe-area-inset-top,0))}
+.topnav{background:var(--ink);color:#fff;display:flex;justify-content:space-around;padding:9px 12px;font:600 .68rem Inter,sans-serif;letter-spacing:.12em}
+header{max-width:640px;margin:0 auto;padding:10px 10px 0}
+.hero{position:relative;height:clamp(210px,58vw,300px);border-radius:0 0 30px 30px;overflow:hidden;background:linear-gradient(160deg,#0d0d0d 0%,#3a3a3a 55%,#8c8c8c 100%)}
+.hero::before{content:"";position:absolute;inset:0 0 30%;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 80'%3E%3Cg fill='none' stroke='%23FFFFFF' stroke-width='2.4' stroke-linecap='round'%3E%3Cpath d='M20 34 Q60 62 100 34'/%3E%3Cpath d='M30 42 l-6 12M42 48 l-3 13M54 51 l-1 13M66 51 l1 13M78 48 l3 13M90 42 l6 12'/%3E%3C/g%3E%3C/svg%3E") center 38%/62% no-repeat;opacity:.35}
+.hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:grayscale(1)}
+.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,transparent 45%,rgba(0,0,0,.55))}
+.htxt{position:absolute;left:0;right:0;bottom:-.04em;text-align:center;z-index:1;color:#fff}
+.htxt small{display:block;font:600 .72rem Inter,sans-serif;letter-spacing:.42em;padding-left:.42em;margin-bottom:2px;opacity:.9}
+h1{margin:0;font:400 clamp(3.2rem,15.5vw,5.6rem)/.86 Anton,Impact,sans-serif;letter-spacing:.005em;text-transform:uppercase}
+body:not(.cust) .hero{height:auto;background:none;border-radius:0}
+body:not(.cust) .hero::before,body:not(.cust) .hero::after,body:not(.cust) .hero img{display:none}
+body:not(.cust) .htxt{position:static;color:var(--ink);padding:26px 0 6px}
+body:not(.cust) h1{font-size:clamp(2rem,9vw,3rem)}
+main{max-width:640px;margin:0 auto;padding:8px 16px 56px}
+h2{margin:0 0 14px;font:400 1.35rem Cardo,Georgia,serif;letter-spacing:.06em;text-transform:uppercase;text-align:center}
+.panel{border:1.5px solid var(--ink);border-radius:26px;padding:20px 16px 18px;margin-top:22px}
+.sech{margin:30px 0 4px}
+.hint{color:var(--muted);font-size:.85rem;margin:-6px 0 12px;text-align:center}
+.hint[hidden]{display:none}
+.calh{display:flex;align-items:center;justify-content:space-between;margin:0 2px 10px}
+.calh b{font-weight:600}
+.nav{width:38px;height:38px;border-radius:50%;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);font:500 1.3rem/1 Inter,sans-serif;cursor:pointer}
+.nav:disabled{opacity:.3;cursor:default}
+.dow,.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center}
+.dow span{font-size:.75rem;color:var(--muted);font-weight:500;padding-bottom:4px}
+.cd{aspect-ratio:1;border:0;border-radius:50%;background:none;color:var(--ink);font:500 .98rem Inter,sans-serif;cursor:pointer;max-width:46px;width:100%;margin:0 auto}
+.cd[aria-pressed=true]{background:var(--ink);color:#fff}
+.cd.past{color:#cdcdcd;cursor:default}
+.cd.off{color:#b5b5b5;cursor:not-allowed;background:linear-gradient(to top right,transparent calc(50% - 1px),var(--deep) calc(50% - 1px),var(--deep) calc(50% + 1px),transparent calc(50% + 1px))}
+.tgrid{display:flex;gap:8px;overflow-x:auto;scroll-snap-type:x proximity;padding:2px 2px 8px;margin:0 -4px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.tgrid::-webkit-scrollbar{display:none}
+.tgrid .slot{flex:0 0 80px;scroll-snap-align:start}
+.swipe{display:block;text-align:center;color:var(--muted);font-size:.78rem;margin-top:6px}
+.slot{border:1.5px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:9px 0;font:500 .95rem Inter,sans-serif;cursor:pointer}
+.slot[aria-pressed=true]{background:var(--ink);border-color:var(--ink);color:#fff}
+.slot:disabled{background:var(--taken);border-color:transparent;color:#b8b8b8;text-decoration:line-through;cursor:not-allowed}
+.svc{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:10px;align-items:start}
+.tile{position:relative;text-align:center;margin:0}
+.tile .pic{display:block;width:100%;padding:0;aspect-ratio:3/4;border-radius:16px;overflow:hidden;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 80'%3E%3Cg fill='none' stroke='%23888888' stroke-width='2.4' stroke-linecap='round'%3E%3Cpath d='M20 34 Q60 62 100 34'/%3E%3Cpath d='M30 42 l-6 12M42 48 l-3 13M54 51 l-1 13M66 51 l1 13M78 48 l3 13M90 42 l6 12'/%3E%3C/g%3E%3C/svg%3E") center/72% no-repeat,linear-gradient(160deg,var(--nude2),var(--nude));border:2px solid transparent;transition:border-color .15s}
+.tile .pic img{width:100%;height:100%;object-fit:cover;display:block}
+.pills{margin-top:8px}
+.panel .techs{margin-top:4px}
+.panel .hint{margin-top:-8px}
+.pill{display:block;color:var(--ink);font:600 .62rem/1.3 Inter,sans-serif;letter-spacing:.07em;text-transform:uppercase}
+label{display:block;font-weight:500;margin:12px 0 4px;font-size:.92rem}
+input,select{width:100%;font:inherit;color:var(--ink);background:var(--surface);border:1.5px solid var(--line);border-radius:14px;padding:12px 14px;appearance:none}
+.panel input{border:0;border-bottom:1.5px solid var(--line);border-radius:0;padding:10px 2px}
+input:focus,select:focus{outline:none;border-color:var(--deep)}
+:focus-visible{outline:3px solid var(--deep);outline-offset:2px}
+.go{margin-top:24px;width:100%;border:0;border-radius:999px;background:var(--ink);color:#fff;font:700 1rem Inter,sans-serif;letter-spacing:.06em;padding:17px;cursor:pointer}
+.go:disabled{opacity:.35;cursor:not-allowed}
+.msg{margin-top:14px;padding:12px 16px;border-radius:14px;border:1.5px solid var(--line)}
+.msg.ok{border-color:var(--ok);color:var(--ok)}.msg.err{border-color:var(--err);color:var(--err)}
+/* ---- σελίδα διαχείρισης ---- */
+.row{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}
+.row small{display:block;color:var(--muted)}.row a{color:var(--deep);font-weight:500}
+.row button{border:1.5px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:6px 14px;font:inherit;cursor:pointer}
+.row.blk b{color:var(--muted)}
+.new{background:var(--nude);color:var(--ink);border-radius:999px;padding:1px 10px;font-size:.8rem;margin-left:6px}
+.dh{margin:22px 0 0;font-weight:700}
+.off-tag{background:var(--nude);border-radius:999px;padding:1px 10px;font-size:.8rem;font-weight:500;margin-left:8px}
+.adm-h{margin-top:24px}
+#list{margin-bottom:28px}
+.box{border:1.5px solid var(--ink);border-radius:22px;padding:4px 16px;margin-top:14px}
+.box[open]{padding-bottom:16px}
+.box summary{font-weight:600;padding:12px 0;cursor:pointer;list-style:none;display:flex;align-items:center;gap:12px}
+.box summary::-webkit-details-marker{display:none}
+.box summary::before{content:"";border:6px solid transparent;border-left:9px solid var(--ink);border-right:0;transition:transform .15s}
+.box[open] summary::before{transform:rotate(90deg)}
+.box .go{margin-top:16px}
+.go.ghost{background:var(--surface);color:var(--ink);border:1.5px solid var(--ink);margin-top:10px}
+.lnk{display:block;margin:22px auto 0;background:none;border:0;color:var(--muted);font:inherit;text-decoration:underline;cursor:pointer}
+.sub{color:var(--muted);margin:4px 0 0}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.chk{display:flex;align-items:center;gap:10px;font-weight:500;margin-top:14px}.chk input{width:20px;height:20px;appearance:auto;accent-color:var(--ink)}
+.techs{position:relative}
+.ddf{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;text-align:left;font:inherit;color:var(--muted);background:var(--surface);border:1.5px solid var(--line);border-radius:14px;padding:12px 14px;cursor:pointer}
+.ddf.has{color:var(--ink);border-color:var(--ink)}
+.caret{border:5px solid transparent;border-top:6px solid var(--ink);margin-top:6px}
+.ddl{margin-top:8px;border:1.5px solid var(--line);border-radius:16px;overflow:hidden}
+.ddl[hidden]{display:none}
+.tch{display:block;width:100%;text-align:left;border:0;border-bottom:1px solid var(--line);background:var(--surface);color:var(--ink);padding:13px 16px;font:inherit;cursor:pointer}
+.tch:last-child{border-bottom:0}
+.tch[aria-pressed=true]{background:var(--nude);font-weight:600}
+.tag[hidden]{display:none}
+</style>
+</head>
+<body>
+<div class="topnav"><span>LASHES</span><span>BROWS</span><span>LASH LIFT</span><span>BOOK ONLINE</span></div>
+<header><div class="hero"><img src="hero.jpg" alt="" onerror="this.remove()"><div class="htxt"><small>LASHES &amp; BROWS</small><h1>Ednalashess</h1></div></div><p class="tag" id="tag" hidden></p></header>
+<main>
+<div id="app"></div>
+</main>
+<script>
+// ===== ΡΥΘΜΙΣΕΙΣ: βάλε εδώ τα στοιχεία από το Supabase =====
+const SUPABASE_URL="https://esbrakxbxgmpfskevrjo.supabase.co";
+const SUPABASE_KEY="sb_publishable_Pg421yOFFmWqy2etH0KE-g_9Ic3nBiP";
+const VAPID_PUBLIC="BPLDgnG6Ca-T7qLFk18ykGxsHVJyRtFOAEt0QYg_Gct2NMNsBhgQ5Vw4fKf22A4hMXDYtirQdJq9M5lSRPK8plY"; // για τις ειδοποιήσεις
+// ==========================================================
+// Υπηρεσίες και διάρκεια σε λεπτά (αλλάζεις εδώ τα λεπτά)
+const TECH=[
+  {n:"Classic",m:120},
+  {n:"Volume",m:150},
+  {n:"Wispy/Anime & L,M",m:120},
+  {n:"Lash lift",m:60},
+  {n:"Brow lamination",m:60}];
+// Οι φωτογραφίες των υπηρεσιών, με τη σειρά. Μια φωτογραφία μπορεί να έχει πάνω από μία υπηρεσία.
+const TILES=[
+  {img:"classic.jpg",items:["Classic"]},
+  {img:"volume.jpg",items:["Volume"]},
+  {img:"wispy-anime.jpg",items:["Wispy/Anime & L,M"]},
+  {img:"lift-brows.jpg",items:["Lash lift","Brow lamination"],label:"Lash lift & Brow lamination"}];
+const MONTHS_AHEAD=24; // πόσους μήνες μπροστά μπορούν να κλείσουν ραντεβού
+// Ωράριο: [ανοίγει, κλείνει] για κάθε μέρα. null = κλειστά εκείνη τη μέρα.
+const WEEK=[
+  ["09:00","20:00"], // Κυριακή
+  ["09:00","20:00"], // Δευτέρα
+  ["09:00","20:00"], // Τρίτη
+  ["09:00","20:00"], // Τετάρτη
+  ["09:00","20:00"], // Πέμπτη
+  ["09:00","20:00"], // Παρασκευή
+  ["09:00","20:00"]];// Σάββατο
+const norm=v=>v<24?v*100:v; // παλιά ραντεβού αποθηκεύτηκαν ως 10, 11...
+const toMin=v=>{v=norm(v);return Math.floor(v/100)*60+v%100},fromMin=m=>Math.floor(m/60)*100+m%60;
+const hm=t=>{const[a,b]=t.split(":");return +a*60+ +b};
+const OPEN=WEEK.filter(Boolean),firstMin=Math.min(...OPEN.map(w=>hm(w[0]))),lastMin=Math.max(...OPEN.map(w=>hm(w[1])));
+// Όλες οι μισές ώρες από το νωρίτερο άνοιγμα ως το αργότερο κλείσιμο (αποθηκεύονται ως 900, 930, 1000...)
+const HOURS=[];for(let m=firstMin;m+30<=lastMin;m+=30)HOURS.push(fromMin(m));
+const weekdayOf=ds=>{const[y,m,d]=ds.split("-");return new Date(y,m-1,d).getDay()};
+// Οι ώρες έναρξης μιας συγκεκριμένης μέρας, μέσα στο ωράριό της
+const dayHours=ds=>{const w=WEEK[weekdayOf(ds)];if(!w)return[];const o=hm(w[0]),c=hm(w[1]);return HOURS.filter(h=>toMin(h)>=o&&toMin(h)+30<=c)};
+const fmt=v=>{v=norm(v);return String(Math.floor(v/100)).padStart(2,"0")+":"+String(v%100).padStart(2,"0")};
+const nowHM=()=>{const n=new Date();return n.getHours()*100+n.getMinutes()};
+const durTxt=m=>m<60?m+" λεπτά":m===60?"1 ώρα":(m/60).toString().replace(".",",")+(m%60?" ώρα":" ώρες");
+// Ποιες μισές ώρες πιάνει ένα ραντεβού που ξεκινά στο start και κρατά dur λεπτά (null αν δεν χωράει)
+const slotsFor=(start,dur)=>{const i=HOURS.indexOf(norm(start)),n=Math.ceil(dur/30);return i<0||i+n>HOURS.length?null:HOURS.slice(i,i+n)};
+const BLOCK="__BLOCK__",CONT="__CONT__";
+const DN=["Κυρ","Δευ","Τρι","Τετ","Πεμ","Παρ","Σαβ"],MN=["Ιαν","Φεβ","Μαρ","Απρ","Μάι","Ιουν","Ιουλ","Αυγ","Σεπ","Οκτ","Νοε","Δεκ"];
+const $=id=>document.getElementById(id),app=$("app");
+const iso=d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+async function rpc(fn,args){
+  const r=await fetch(SUPABASE_URL+"/rest/v1/rpc/"+fn,{method:"POST",headers:{apikey:SUPABASE_KEY,"Content-Type":"application/json"},body:JSON.stringify(args)});
+  if(!r.ok)throw new Error(await r.text());
+  const t=await r.text();return t?JSON.parse(t):null;
+}
+function techChips(el,onChange){
+  const sel=new Set();
+  el.innerHTML='<button type="button" class="ddf" aria-expanded="false"><span class="ddv"></span><i class="caret"></i></button><div class="ddl" hidden></div>';
+  const f=el.firstChild,v=f.firstChild,list=el.lastChild;
+  const show=()=>{const t=TECH.filter(t=>sel.has(t)).map(t=>t.n).join(" + ");v.textContent=t||"Διάλεξε υπηρεσία";f.classList.toggle("has",!!t)};
+  const open=o=>{list.hidden=!o;f.setAttribute("aria-expanded",o)};
+  f.onclick=()=>open(list.hidden);
+  document.addEventListener("click",e=>{if(!el.contains(e.target))open(false)});
+  TECH.forEach(t=>{const b=document.createElement("button");b.type="button";b.className="tch";b.textContent=t.n;b.setAttribute("aria-pressed","false");
+    b.onclick=()=>{sel.has(t)?sel.delete(t):sel.add(t);b.setAttribute("aria-pressed",sel.has(t));show();onChange&&onChange()};list.append(b)});
+  show();
+  return{value:()=>TECH.filter(t=>sel.has(t)).map(t=>t.n).join(" + "),
+    minutes:()=>TECH.filter(t=>sel.has(t)).reduce((a,t)=>a+t.m,0),
+    clear:()=>{sel.clear();list.querySelectorAll(".tch").forEach(b=>b.setAttribute("aria-pressed","false"));show();open(false);onChange&&onChange()}};
+}
+// Φωτογραφίες υπηρεσιών (μόνο για προβολή)
+function svcGallery(el){
+  TILES.forEach(g=>{const tile=document.createElement("figure");tile.className="tile";
+    const pic=document.createElement("div");pic.className="pic";
+    const img=document.createElement("img");img.alt=g.items.join(" / ");img.loading="lazy";img.onerror=()=>img.remove();img.src=g.img;pic.append(img);
+    const pills=document.createElement("figcaption");pills.className="pills";
+    const p=document.createElement("span");p.className="pill";p.textContent=g.label||g.items.join(" & ");pills.append(p);
+    tile.append(pic,pills);el.append(tile)});
+}
+function say(t,k){const m=$("msg");m.innerHTML='<div class="msg '+k+'"></div>';m.firstChild.textContent=t}
+if(location.hash==="#admin"||/[?&]admin/.test(location.search))admin();else customer();
+addEventListener("hashchange",()=>location.reload());
+
+/* ---------- Πελάτισσες ---------- */
+function customer(){
+  document.body.classList.add("cust");
+  const MF=["Ιανουάριος","Φεβρουάριος","Μάρτιος","Απρίλιος","Μάιος","Ιούνιος","Ιούλιος","Αύγουστος","Σεπτέμβριος","Οκτώβριος","Νοέμβριος","Δεκέμβριος"];
+  const today=new Date();today.setHours(0,0,0,0);
+  const firstMonth=new Date(today.getFullYear(),today.getMonth(),1),lastDay=new Date(today.getFullYear(),today.getMonth()+MONTHS_AHEAD+1,0);
+  let view=new Date(firstMonth),selDay=null,selHour=null,taken=new Set(),loaded=false;
+  app.innerHTML=`<h2 class="sech">ΥΠΗΡΕΣΙΕΣ</h2><div class="svc" id="gallery"></div>
+  <section class="panel"><h2>ΥΠΗΡΕΣΙΑ</h2><p class="hint">Μπορείς να διαλέξεις περισσότερες από μία.</p><div class="techs" id="tech"></div></section>
+  <section class="panel"><h2>ΗΜΕΡΟΜΗΝΙΑ</h2>
+    <div class="calh"><button class="nav" id="prev" aria-label="Προηγούμενος μήνας">‹</button><b id="mlabel"></b><button class="nav" id="next" aria-label="Επόμενος μήνας">›</button></div>
+    <div class="dow"><span>Δε</span><span>Τρ</span><span>Τε</span><span>Πε</span><span>Πα</span><span>Σα</span><span>Κυ</span></div>
+    <div class="cal" id="days"></div></section>
+  <section class="panel"><h2>ΩΡΑ</h2><p class="hint" id="durInfo" hidden></p><div class="tgrid" id="slots"></div><span class="swipe">σύρε για περισσότερες ώρες ›</span></section>
+  <section class="panel"><h2>ΣΤΟΙΧΕΙΑ</h2>
+    <label for="name">Ονοματεπώνυμο</label><input id="name" autocomplete="name">
+    <label for="phone">Τηλέφωνο</label><input id="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="69xxxxxxxx"></section>
+  <button class="go" id="go" disabled>ΚΛΕΙΣΕ ΤΟ ΡΑΝΤΕΒΟΥ</button><div id="msg" aria-live="polite"></div>`;
+  const isToday=ds=>ds===iso(today);
+  const dayOff=ds=>dayHours(ds).every(h=>taken.has(ds+"_"+h)||(isToday(ds)&&h<=nowHM())); // κλειστή, περασμένη ή γεμάτη μέρα
+  const phoneOk=()=>$("phone").value.replace(/\D/g,"").length>=10;
+  const check=()=>$("go").disabled=!(selDay&&selHour!==null&&$("name").value.trim()&&phoneOk()&&tech.minutes());
+  const fits=h=>{if(!selDay)return false;const dur=tech.minutes()||30;
+    if(isToday(selDay)&&h<=nowHM())return false;
+    const open=new Set(dayHours(selDay)),need=slotsFor(h,dur);return !!need&&need.every(x=>open.has(x)&&!taken.has(selDay+"_"+x))};
+  svcGallery($("gallery"));
+  const tech=techChips($("tech"),()=>{let moved=false;if(selHour!==null&&!fits(selHour)){selHour=null;moved=true}
+    $("durInfo").textContent="Η ώρα που είχες διαλέξει δεν χωράει για αυτές τις υπηρεσίες. Διάλεξε άλλη ώρα.";$("durInfo").hidden=!moved;renderSlots();check()});
+  function firstFree(){for(let d=new Date(today);d<=lastDay;d.setDate(d.getDate()+1)){const ds=iso(d);if(!dayOff(ds))return ds}return null}
+  function renderCal(){
+    $("mlabel").textContent=MF[view.getMonth()]+" "+view.getFullYear();
+    $("prev").disabled=view<=firstMonth;
+    $("next").disabled=new Date(view.getFullYear(),view.getMonth()+1,1)>lastDay;
+    const g=$("days");g.innerHTML="";
+    for(let i=0,off=(view.getDay()+6)%7;i<off;i++)g.append(document.createElement("span"));
+    const n=new Date(view.getFullYear(),view.getMonth()+1,0).getDate();
+    for(let d=1;d<=n;d++){const dt=new Date(view.getFullYear(),view.getMonth(),d),ds=iso(dt),b=document.createElement("button");
+      b.className="cd";b.textContent=d;b.setAttribute("aria-pressed",ds===selDay);
+      if(dt<today||dt>lastDay){b.disabled=true;b.classList.add("past")}
+      else if(dayOff(ds)){b.disabled=true;b.classList.add("off");b.setAttribute("aria-label",d+" "+MF[dt.getMonth()]+", κλειστό")}
+      b.onclick=()=>{selDay=ds;selHour=null;$("durInfo").hidden=true;renderCal();renderSlots();check()};g.append(b)}
+  }
+  let scrolledFor=null;
+  function renderSlots(){
+    const box=$("slots"),keep=box.scrollLeft;box.innerHTML="";
+    if(!selDay){box.innerHTML='<p class="hint" style="grid-column:1/-1;margin:0">Διάλεξε πρώτα ημερομηνία.</p>';return}
+    dayHours(selDay).forEach(h=>{const b=document.createElement("button");b.className="slot";
+      b.textContent=fmt(h);b.disabled=!fits(h);
+      b.setAttribute("aria-pressed",selHour===h);b.onclick=()=>{selHour=h;$("durInfo").hidden=true;renderSlots();check()};box.append(b)});
+    // σε νέα μέρα: πάει στην πρώτη ελεύθερη ώρα, αλλιώς μένει εκεί που ήταν
+    const key=selDay+"|"+tech.minutes();
+    if(scrolledFor!==key){scrolledFor=key;const f=box.querySelector(".slot[aria-pressed=true]")||box.querySelector(".slot:enabled");box.scrollLeft=f?f.offsetLeft-box.offsetLeft-4:0}else box.scrollLeft=keep;
+  }
+  $("prev").onclick=()=>{view=new Date(view.getFullYear(),view.getMonth()-1,1);renderCal()};
+  $("next").onclick=()=>{view=new Date(view.getFullYear(),view.getMonth()+1,1);renderCal()};
+  async function load(){try{const r=await rpc("get_taken",{from_day:iso(today)});taken=new Set(r.map(x=>x.day+"_"+norm(x.hour)));
+    if(!selDay||dayOff(selDay)){const f=firstFree();if(f!==selDay){selDay=f;selHour=null;if(f&&!loaded){const[y,m]=f.split("-");view=new Date(+y,m-1,1)}}}
+    if(selHour!==null&&!fits(selHour))selHour=null;loaded=true;renderCal();renderSlots();check()}
+    catch(e){say("Δεν φορτώθηκαν οι διαθέσιμες ώρες. Δοκίμασε ξανά σε λίγο.","err")}}
+  ["name","phone"].forEach(i=>$(i).addEventListener("input",check));
+  $("go").onclick=async()=>{
+    $("go").disabled=true;const dur=tech.minutes(),need=slotsFor(selHour,dur);
+    try{
+      const ok=await rpc("book_multi",{p_day:selDay,p_hours:need,p_name:$("name").value.trim(),p_phone:$("phone").value.trim(),p_tech:tech.value()});
+      if(ok){const[y,m,d]=selDay.split("-");say(`Το ραντεβού σου κλείστηκε: ${d}/${m} στις ${fmt(selHour)} – ${tech.value()}. Σε περιμένουμε!`,"ok");$("name").value="";$("phone").value="";tech.clear()}
+      else say("Κάποια από αυτές τις ώρες μόλις κλείστηκε. Διάλεξε άλλη ώρα.","err");
+    }catch(e){say("Δεν ήταν δυνατή η κράτηση. Δοκίμασε ξανά.","err")}
+    selHour=null;load();
+  };
+  selDay=firstFree();renderCal();renderSlots();load();setInterval(load,30000);
+}
+
+/* ---------- Διαχείριση (τεχνικός) ---------- */
+function admin(){
+  const getPin=()=>{try{return localStorage.getItem("edna_pin")||sessionStorage.getItem("edna_pin")||""}catch(e){return ""}};
+  const savePin=()=>{try{if($("remember").checked){localStorage.setItem("edna_pin",pin)}else{sessionStorage.setItem("edna_pin",pin);localStorage.removeItem("edna_pin")}}catch(e){}};
+  const forgetPin=()=>{try{localStorage.removeItem("edna_pin");sessionStorage.removeItem("edna_pin")}catch(e){}};
+  let pin=getPin(),seen=null,nReady=false;
+  app.innerHTML=`<div id="tools" hidden><h2 class="adm-h">ΤΑ ΡΑΝΤΕΒΟΥ ΣΟΥ</h2><div id="list"></div>
+  <details class="box"><summary>Προσθήκη ραντεβού</summary>
+   <p class="sub">Για ραντεβού που κλείνεις από τηλέφωνο ή Instagram.</p>
+   <div class="two"><div><label for="aDay">Ημερομηνία</label><input id="aDay" type="date"></div>
+   <div><label for="aHour">Ώρα έναρξης</label><select id="aHour">${HOURS.map(h=>`<option value="${h}">${fmt(h)}</option>`).join("")}</select></div></div>
+   <label for="aName">Όνομα πελάτισσας</label><input id="aName">
+   <label for="aPhone">Τηλέφωνο (προαιρετικό)</label><input id="aPhone" type="tel">
+   <label>Υπηρεσία</label><div class="techs" id="aTech"></div>
+   <button class="go" id="aGo">Προσθήκη ραντεβού</button></details>
+  <details class="box"><summary>Κλείσιμο ώρας ή μέρας</summary>
+   <p class="sub">Για ρεπό, διάλειμμα ή αργία. Οι πελάτισσες θα βλέπουν την ώρα πιασμένη.</p>
+   <div class="two"><div><label for="bDay">Ημερομηνία</label><input id="bDay" type="date"></div>
+   <div><label for="bHour">Ώρα</label><select id="bHour">${HOURS.map(h=>`<option value="${h}">${fmt(h)}</option>`).join("")}</select></div></div>
+   <label class="chk"><input id="bAll" type="checkbox"> Όλη τη μέρα</label>
+   <button class="go" id="bGo">Κλείσιμο</button></details>
+  <details class="box" id="nBox"><summary>Ειδοποιήσεις</summary>
+   <p class="sub" id="nStat"></p>
+   <button class="go" id="nOn" hidden>Ενεργοποίηση ειδοποιήσεων</button>
+   <button class="go ghost" id="nTest" hidden>Δοκιμαστική ειδοποίηση</button></details>
+  <button class="lnk" id="out">Αποσύνδεση</button>
+  </div><div id="login"><label for="pin">Κωδικός PIN</label><input id="pin" type="password" inputmode="numeric">
+  <label class="chk"><input id="remember" type="checkbox"> Να με θυμάται σε αυτό το κινητό</label>
+  <button class="go" id="in">Είσοδος</button></div><div id="msg"></div>`;
+  try{$("remember").checked=!!localStorage.getItem("edna_pin")}catch(e){}
+  const beep=()=>{try{const c=new AudioContext(),o=c.createOscillator();o.connect(c.destination);o.frequency.value=880;o.start();o.stop(c.currentTime+.25)}catch(e){}};
+  async function load(){
+    try{
+      let rows=await rpc("admin_list",{pin});savePin();$("login").hidden=true;$("tools").hidden=false;if(!nReady){nReady=true;nState(true)}
+      rows=rows.filter(r=>!String(r.tech).startsWith(CONT));
+      const ids=new Set(rows.map(r=>r.id));let fresh=new Set();
+      if(seen){rows.forEach(r=>{if(!seen.has(r.id))fresh.add(r.id)});if(fresh.size)beep()}
+      seen=ids;draw(rows,fresh);
+    }catch(e){$("login").hidden=false;$("tools").hidden=true;forgetPin();say("Λάθος PIN ή πρόβλημα σύνδεσης.","err")}
+  }
+  function draw(rows,fresh){
+    rows=rows.slice().sort((a,b)=>a.day<b.day?-1:a.day>b.day?1:norm(a.hour)-norm(b.hour));
+    const L=$("list");L.innerHTML=rows.length?"":'<p class="sub">Δεν υπάρχουν ραντεβού ακόμα.</p>';
+    const days=[...new Set(rows.map(r=>r.day))];
+    const reopen=ids=>async()=>{for(const id of ids)await rpc("admin_cancel",{pin,bid:id});load()};
+    days.forEach(day=>{
+      const dr=rows.filter(r=>r.day===day),blocks=dr.filter(r=>r.tech===BLOCK);
+      const dh=dayHours(day),full=dh.length>0&&dh.every(h=>blocks.some(r=>norm(r.hour)===h));
+      const[y,m,d]=day.split("-"),dt=new Date(y,m-1,d);
+      const h=document.createElement("div");h.className="dh";h.textContent=`${DN[dt.getDay()]} ${d}/${m}`;
+      if(full){const t=document.createElement("span");t.className="off-tag";t.textContent="Κλειστό";h.append(t)}
+      L.append(h);
+      if(full){const row=document.createElement("div");row.className="row blk";const s=document.createElement("div");s.innerHTML="<b>Κλειστό όλη τη μέρα</b>";
+        const u=document.createElement("button");u.textContent="Άνοιγμα";u.onclick=reopen(blocks.map(r=>r.id));row.append(s,u);L.append(row);
+        dr.filter(r=>r.tech!==BLOCK).forEach(r=>appt(L,r,fresh));return}
+      // ενώνει συνεχόμενες κλειστές μισές ώρες σε ένα διάστημα
+      let grp=null;const items=[];
+      dr.forEach(r=>{if(r.tech===BLOCK){const i=HOURS.indexOf(norm(r.hour));
+          if(grp&&i===grp.last+1){grp.last=i;grp.ids.push(r.id)}else{grp={first:i,last:i,ids:[r.id],hour:norm(r.hour)};items.push(grp)}}
+        else{grp=null;items.push(r)}});
+      items.forEach(it=>{if(!it.ids)return appt(L,it,fresh);
+        const row=document.createElement("div");row.className="row blk";const s=document.createElement("div");s.innerHTML="<b></b>";
+        s.firstChild.textContent=fmt(HOURS[it.first])+"–"+fmt(fromMin(toMin(HOURS[it.last])+30))+" · Κλειστό";
+        const u=document.createElement("button");u.textContent="Άνοιγμα";u.onclick=reopen(it.ids);row.append(s,u);L.append(row)});
+    });
+  }
+  function appt(L,r,fresh){
+    const row=document.createElement("div");row.className="row";const s=document.createElement("div");const dur=r.dur||30;
+    s.innerHTML="<b></b><small></small>";s.firstChild.textContent=fmt(r.hour)+"–"+fmt(fromMin(toMin(r.hour)+dur))+" · "+r.name;
+    s.lastChild.textContent=r.tech;
+    if(fresh.has(r.id)){const n=document.createElement("span");n.className="new";n.textContent="Νέο";s.firstChild.append(n)}
+    if(r.phone){const call=document.createElement("a");call.href="tel:"+r.phone;call.textContent=r.phone;s.lastChild.append(" · ",call)}
+    const c=document.createElement("button");c.textContent="Ακύρωση";
+    c.onclick=async()=>{if(confirm("Ακύρωση ραντεβού για "+r.name+";")){await rpc("admin_cancel",{pin,bid:r.id});load()}};
+    row.append(s,c);L.append(row);
+  }
+  $("in").onclick=()=>{pin=$("pin").value;$("msg").innerHTML="";load()};
+  $("aDay").value=$("bDay").value=iso(new Date());
+  const aTech=techChips($("aTech"));
+  $("bAll").onchange=()=>$("bHour").parentElement.hidden=$("bAll").checked;
+  $("aGo").onclick=async()=>{
+    const name=$("aName").value.trim(),dur=aTech.minutes();
+    if(!$("aDay").value||!name||!dur){say("Συμπλήρωσε ημερομηνία, όνομα και υπηρεσία.","err");return}
+    const need=slotsFor(+$("aHour").value,dur);
+    if(!need){say("Το ραντεβού ("+durTxt(dur)+") δεν χωράει πριν το τέλος της ημέρας. Διάλεξε πιο νωρίς.","err");return}
+    try{const ok=await rpc("book_multi",{p_day:$("aDay").value,p_hours:need,p_name:name,p_phone:$("aPhone").value.trim(),p_tech:aTech.value()});
+      if(ok){say("Το ραντεβού προστέθηκε ("+fmt(need[0])+"–"+fmt(fromMin(toMin(need[0])+dur))+").","ok");$("aName").value="";$("aPhone").value="";aTech.clear();seen=null;load()}
+      else say("Κάποια από αυτές τις ώρες είναι ήδη πιασμένη.","err")}catch(e){say("Δεν ήταν δυνατή η προσθήκη. Δοκίμασε ξανά.","err")}
+  };
+  $("bGo").onclick=async()=>{
+    if(!$("bDay").value){say("Διάλεξε ημερομηνία.","err");return}
+    const hrs=$("bAll").checked?dayHours($("bDay").value):[+$("bHour").value];let n=0;
+    try{for(const h of hrs){if(await rpc("book",{p_day:$("bDay").value,p_hour:h,p_name:"Κλειστό",p_phone:"",p_tech:BLOCK}))n++}
+      say(n?"Έκλεισαν "+n+(n===1?" ώρα.":" ώρες.")+(n<hrs.length?" Οι υπόλοιπες είχαν ήδη ραντεβού.":""):"Αυτές οι ώρες είναι ήδη πιασμένες.",n?"ok":"err");seen=null;load()}
+    catch(e){say("Δεν ήταν δυνατό το κλείσιμο. Δοκίμασε ξανά.","err")}
+  };
+  // ---- Ειδοποιήσεις ----
+  const isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
+  const standalone=navigator.standalone||matchMedia("(display-mode: standalone)").matches;
+  const pushOK="serviceWorker" in navigator&&"PushManager" in window&&"Notification" in window;
+  const swReady="serviceWorker" in navigator?navigator.serviceWorker.register("sw.js").then(()=>navigator.serviceWorker.ready).catch(()=>null):Promise.resolve(null);
+  const keyBytes=s=>{s=s.replace(/-/g,"+").replace(/_/g,"/");while(s.length%4)s+="=";return Uint8Array.from(atob(s),c=>c.charCodeAt(0))};
+  async function nState(resave){
+    const st=$("nStat"),on=$("nOn"),test=$("nTest");on.hidden=test.hidden=true;
+    if(!pushOK){st.textContent=isIOS&&!standalone
+      ?"Για να σου έρχονται ειδοποιήσεις, πρόσθεσε πρώτα αυτή τη σελίδα στην οθόνη Αφετηρίας (Κοινοποίηση → Προσθήκη στην οθόνη Αφετηρίας) και άνοιξέ τη από το εικονίδιο Ednalashess."
+      :"Αυτός ο browser δεν υποστηρίζει ειδοποιήσεις. Δοκίμασε από Safari (iPhone) ή Chrome (Android).";$("nBox").open=true;return}
+    if(Notification.permission==="denied"){st.textContent="Οι ειδοποιήσεις είναι κλειστές από τις ρυθμίσεις του κινητού. Άνοιξέ τες από Ρυθμίσεις → Ειδοποιήσεις → Ednalashess.";return}
+    const reg=await swReady,sub=reg&&Notification.permission==="granted"?await reg.pushManager.getSubscription():null;
+    if(sub){st.textContent="Οι ειδοποιήσεις είναι ενεργές σε αυτό το κινητό ✓";test.hidden=false;
+      if(resave)rpc("save_push_sub",{pin,sub:sub.toJSON()}).catch(()=>{})}
+    else{st.textContent="Ενεργοποίησέ τες για να σου έρχεται ειδοποίηση σε κάθε νέο ραντεβού.";on.hidden=false;$("nBox").open=true}
+  }
+  $("nOn").onclick=async()=>{
+    let step="1";
+    try{
+      const perm=await Notification.requestPermission();
+      if(perm!=="granted"){nState();return}
+      step="2";let reg=await swReady;
+      if(!reg){await navigator.serviceWorker.register("sw.js?v="+Date.now());reg=await navigator.serviceWorker.ready}
+      step="3";const sub=await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:keyBytes(VAPID_PUBLIC)});
+      step="4";await rpc("save_push_sub",{pin,sub:sub.toJSON()});
+      say("Οι ειδοποιήσεις ενεργοποιήθηκαν.","ok");nState();
+    }catch(e){say("Δεν ήταν δυνατή η ενεργοποίηση (βήμα "+step+": "+((e&&e.message)||e)+").","err")}
+  };
+  $("nTest").onclick=async()=>{try{await rpc("test_push",{pin});say("Στάλθηκε. Σε λίγα δευτερόλεπτα θα έρθει η ειδοποίηση.","ok")}catch(e){say("Δεν ήταν δυνατή η αποστολή. Δοκίμασε ξανά.","err")}};
+  $("out").onclick=()=>{forgetPin();location.reload()};
+  document.addEventListener("visibilitychange",()=>{if(!document.hidden&&pin)load()});
+  if(pin)load();setInterval(()=>{if(pin)load()},15000);
+}
+</script>
+</body>
+</html>
